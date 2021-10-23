@@ -1,18 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Post, PostsService } from 'src/app/core/core-posts';
+import {
+  DeclarativePostsService,
+  Post,
+  PostsService,
+} from 'src/app/core/core-posts';
 
 @Component({
   selector: 'app-declarative-posts',
   templateUrl: './declarative-posts.component.html',
   styleUrls: ['./declarative-posts.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeclarativePostsComponent implements OnInit {
-  posts: Observable<Post[]>;
+  posts$ = this.postService.posts$;
 
-  constructor(private postService: PostsService) {}
+  constructor(private postService: DeclarativePostsService) {}
 
-  ngOnInit(): void {
-    this.posts = this.postService.getPostWithUser();
-  }
+  ngOnInit(): void {}
 }

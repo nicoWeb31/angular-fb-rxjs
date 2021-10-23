@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PostsService } from './service';
+import { PostsService, DeclarativePostsService } from './service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [],
   imports: [CommonModule, HttpClientModule],
-  providers: [PostsService],
+  providers: [PostsService, DeclarativePostsService],
 })
 export class CorePostsModule {}
