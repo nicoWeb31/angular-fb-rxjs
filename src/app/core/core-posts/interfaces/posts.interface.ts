@@ -8,5 +8,5 @@ export interface Post {
 }
 
 export interface PostWithUser extends Post {
-  user: string;
+  user: number;
 }

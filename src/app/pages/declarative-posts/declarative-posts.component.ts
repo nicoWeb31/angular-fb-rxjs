@@ -1,10 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import {
-  DeclarativePostsService,
-  Post,
-  PostsService,
-} from 'src/app/core/core-posts';
+import { map } from 'rxjs';
+import { DeclarativePostsService } from 'src/app/core/core-posts';
 
 @Component({
   selector: 'app-declarative-posts',
@@ -13,7 +9,13 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeclarativePostsComponent implements OnInit {
-  posts$ = this.postService.posts$;
+  userId : number = 4;
+  posts$ = this.postService.postsWithUsers$;
+  filteredPost$ = this.posts$.pipe(
+    map((posts) => {
+      return posts.filter((post) => post.userId === this.userId);
+    })
+  );
 
   constructor(private postService: DeclarativePostsService) {}
 

@@ -24,7 +24,7 @@ export class PostsService {
             return posts.map((post) => {
               return {
                 ...post,
-                user: users.find((user) => user.id === post.userId)?.name,
+                user: users.find((user) => user.id === post.userId)?.id,
               };
             });
           })
