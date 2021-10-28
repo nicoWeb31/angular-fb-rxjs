@@ -19,7 +19,7 @@ export class PostsService {
   getPostWithUser(): Observable<PostWithUser[]> {
     return this.getPost().pipe(
       mergeMap((posts) => {
-        return this.userService.getUser().pipe(
+        return this.userService.users$.pipe(
           map((users) => {
             return posts.map((post) => {
               return {

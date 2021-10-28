@@ -5,9 +5,12 @@ import { User } from '..';
 
 @Injectable()
 export class UserService {
+
+  users$ = this.http.get<User[]>(`https://jsonplaceholder.typicode.com/users`);
+
   constructor(private http: HttpClient) {}
 
-  getUser(): Observable<User[]> {
-    return this.http.get<User[]>(`https://jsonplaceholder.typicode.com/users`);
-  }
+  // getUser(): Observable<User[]> {
+  //   return this.http.get<User[]>(`https://jsonplaceholder.typicode.com/users`);
+  // }
 }
