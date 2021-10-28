@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { map } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Subject } from 'rxjs';
 import { DeclarativePostsService } from 'src/app/core/core-posts';
 import { UserService } from 'src/app/core/core-user';
 
@@ -10,15 +10,16 @@ import { UserService } from 'src/app/core/core-user';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeclarativePostsComponent implements OnInit {
+  userIdSubject = new BehaviorSubject<number | null>(null);
+  selectUserAction$ = this.userIdSubject.asObservable();
+
   userId: number | null;
   posts$ = this.postService.postsWithUsers$;
   user$ = this.userService.users$;
 
-  filteredPost$ = this.posts$.pipe(
-    map((posts) => {
-      return posts.filter((post) =>
-        this.userId ? post.userId === this.userId : true
-      );
+  filteredPost$ = combineLatest([this.posts$, this.selectUserAction$]).pipe(
+    map(([posts, userId]) => {
+      return posts.filter((post) => (userId ? post.userId === userId : true));
     })
   );
 
@@ -32,8 +33,7 @@ export class DeclarativePostsComponent implements OnInit {
   selectUser(event: Event) {
     console.log(event);
 
-    const selectUser = (this.userId = +(event.target as HTMLSelectElement)
-      .value);
-    this.userId = selectUser;
+    const selectUser = +(event.target as HTMLSelectElement).value;
+    this.userIdSubject.next(selectUser);
   }
 }
