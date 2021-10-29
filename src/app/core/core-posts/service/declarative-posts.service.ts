@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { combineLatest, map, Subject } from 'rxjs';
+import { catchError, combineLatest, map, Observable, Subject, throwError } from 'rxjs';
 import { Post } from '..';
 import { DeclarativeUserService } from '../../core-user';
 
 @Injectable()
 export class DeclarativePostsService {
-  posts$ = this.http.get<Post[]>('https://jsonplaceholder.typicode.com/posts');
+  posts$ = this.http
+    .get<Post[]>('https://jsonplaceholder.typicode.com/posts')
+    .pipe(catchError(this.handleError));
 
   postsWithUsers$ = combineLatest([
     this.posts$,
@@ -19,7 +21,8 @@ export class DeclarativePostsService {
           user: users.find((user) => user.id === post.userId)?.id,
         } as Post;
       });
-    })
+    }),
+    catchError(this.handleError)
   );
 
   private selectedPostSubject = new Subject<number>();
@@ -31,11 +34,19 @@ export class DeclarativePostsService {
   post$ = combineLatest([this.postsWithUsers$, this.selectedPostAction$]).pipe(
     map(([posts, selectPostId]) => {
       return posts.find((post) => post.id === selectPostId);
-    })
+    }),
+    catchError(this.handleError)
   );
 
   constructor(
     private http: HttpClient,
     private declarativeUserService: DeclarativeUserService
   ) {}
+
+  handleError(error: Error) {
+    return throwError(() => {
+      console.log(error)
+      return 'unknown  error occured, please try again';
+    });
+  }
 }
