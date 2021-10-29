@@ -1,0 +1,22 @@
+<div class="row">
+  <h3>Post details ! </h3>
+  <div class="col-md-4">
+    <div class="list-group">
+      <a
+      *ngFor="let item of post$ | async"
+      (click)="onSelectPost(item, $event)"
+        href="#"
+        class="list-group-item list-group-item-action"
+        aria-current="true"
+      >
+        {{item.title}}
+      </a>
+
+    </div>
+  </div>
+  <div class="col-md-8">
+
+    <!-- show post detail -->
+    <app-post></app-post>
+  </div>
+</div>
