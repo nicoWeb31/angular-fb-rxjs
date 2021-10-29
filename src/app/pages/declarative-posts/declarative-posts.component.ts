@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Subject, tap } from 'rxjs';
+import { CoreLoaderService } from 'src/app/core/core-loader';
 import { DeclarativePostsService } from 'src/app/core/core-posts';
 import { UserService } from 'src/app/core/core-user';
 
@@ -18,6 +19,9 @@ export class DeclarativePostsComponent implements OnInit {
   user$ = this.userService.users$;
 
   filteredPost$ = combineLatest([this.posts$, this.selectUserAction$]).pipe(
+    tap(()=>{
+      this.loaderService.hideLoader()
+    }),
     map(([posts, userId]) => {
       return posts.filter((post) => (userId ? post.userId === userId : true));
     })
@@ -25,10 +29,13 @@ export class DeclarativePostsComponent implements OnInit {
 
   constructor(
     private postService: DeclarativePostsService,
-    private userService: UserService
+    private userService: UserService,
+    private loaderService: CoreLoaderService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loaderService.showLoader()
+  }
 
   selectUser(event: Event) {
     console.log(event);
