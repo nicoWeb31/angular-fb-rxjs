@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest, map, Subject } from 'rxjs';
 import { Post } from '..';
 import { DeclarativeUserService } from '../../core-user';
 
@@ -19,6 +19,18 @@ export class DeclarativePostsService {
           user: users.find((user) => user.id === post.userId)?.id,
         } as Post;
       });
+    })
+  );
+
+  private selectedPostSubject = new Subject<number>();
+  selectedPostAction$ = this.selectedPostSubject.asObservable();
+
+  selectedPost(postId: number) {
+    this.selectedPostSubject.next(postId);
+  }
+  post$ = combineLatest([this.postsWithUsers$, this.selectedPostAction$]).pipe(
+    map(([posts, selectPostId]) => {
+      return posts.find((post) => post.id === selectPostId);
     })
   );
 

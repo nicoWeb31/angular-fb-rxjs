@@ -1,1 +1,12 @@
-<p>post works!</p>
+<div class="" *ngIf="post$ | async as post">
+  <div class="">
+    Id : {{post.id}}
+  </div>
+<div class="">
+  Title : {{post.title}}
+</div>
+<div class="">
+  Body : {{post.body}}
+</div>
+
+</div>
