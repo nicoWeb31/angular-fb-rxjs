@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, combineLatest, map, Observable, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, map, Observable, Subject, throwError } from 'rxjs';
 import { Post } from '..';
 import { DeclarativeUserService } from '../../core-user';
 
@@ -25,7 +25,7 @@ export class DeclarativePostsService {
     catchError(this.handleError)
   );
 
-  private selectedPostSubject = new Subject<number>();
+  private selectedPostSubject = new BehaviorSubject<number>(0);
   selectedPostAction$ = this.selectedPostSubject.asObservable();
 
   selectedPost(postId: number) {
