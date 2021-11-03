@@ -1,5 +1,8 @@
 <div class="row">
   <h3>Post details !</h3>
+  <div class="btn">
+    <button class="btn btn-success" (click)="addPost()">add Post</button>
+  </div>
   <div class="col-md-4">
     <div class="list-group" *ngIf="viewModel$ | async as vm">
       <a
@@ -16,6 +19,9 @@
   </div>
   <div class="col-md-8">
     <!-- show post detail -->
-    <app-post></app-post>
+    <app-post *ngIf="!showAddPost"></app-post>
+
+    <app-add-post *ngIf="showAddPost"></app-add-post>
+    <!-- or add post -->
   </div>
 </div>

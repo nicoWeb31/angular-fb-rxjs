@@ -1,6 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, combineLatest, map, Observable, Subject, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  map, shareReplay, throwError
+} from 'rxjs';
 import { Post } from '..';
 import { DeclarativeUserService } from '../../core-user';
 
@@ -8,7 +13,7 @@ import { DeclarativeUserService } from '../../core-user';
 export class DeclarativePostsService {
   posts$ = this.http
     .get<Post[]>('https://jsonplaceholder.typicode.com/posts')
-    .pipe(catchError(this.handleError));
+    .pipe(catchError(this.handleError), shareReplay(1));
 
   postsWithUsers$ = combineLatest([
     this.posts$,
@@ -22,7 +27,8 @@ export class DeclarativePostsService {
         } as Post;
       });
     }),
-    catchError(this.handleError)
+    catchError(this.handleError),
+    shareReplay(1)
   );
 
   private selectedPostSubject = new BehaviorSubject<number>(0);
@@ -35,7 +41,8 @@ export class DeclarativePostsService {
     map(([posts, selectPostId]) => {
       return posts.find((post) => post.id === selectPostId);
     }),
-    catchError(this.handleError)
+    catchError(this.handleError),
+    shareReplay(1)
   );
 
   constructor(
@@ -45,7 +52,7 @@ export class DeclarativePostsService {
 
   handleError(error: Error) {
     return throwError(() => {
-      console.log(error)
+      console.log(error);
       return 'unknown  error occured, please try again';
     });
   }

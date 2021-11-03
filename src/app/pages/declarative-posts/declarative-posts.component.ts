@@ -19,8 +19,8 @@ export class DeclarativePostsComponent implements OnInit {
   user$ = this.userService.users$;
 
   filteredPost$ = combineLatest([this.posts$, this.selectUserAction$]).pipe(
-    tap(()=>{
-      this.loaderService.hideLoader()
+    tap(() => {
+      this.loaderService.hideLoader();
     }),
     map(([posts, userId]) => {
       return posts.filter((post) => (userId ? post.userId === userId : true));
@@ -34,7 +34,9 @@ export class DeclarativePostsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loaderService.showLoader()
+    setTimeout(() => {
+      this.loaderService.showLoader();
+    }, 100);
   }
 
   selectUser(event: Event) {
