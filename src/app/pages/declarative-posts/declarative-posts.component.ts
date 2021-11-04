@@ -34,9 +34,7 @@ export class DeclarativePostsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.loaderService.showLoader();
-    }, 100);
+    this.loaderService.showLoader();
   }
 
   selectUser(event: Event) {

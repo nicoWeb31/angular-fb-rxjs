@@ -9,7 +9,7 @@ import { DeclarativePostsService, Post } from 'src/app/core/core-posts';
 })
 export class AltPostsComponent {
   showAddPost: boolean = false;
-  post$ = this.postService.postsWithUsers$.pipe(
+  post$ = this.postService.allPost$.pipe(
     tap((posts) => {
       posts[0].id && this.postService.selectedPost(posts[0].id);
     })
@@ -29,6 +29,7 @@ export class AltPostsComponent {
   constructor(private postService: DeclarativePostsService) {}
 
   onSelectPost(post: Post, e: Event) {
+    this.showAddPost = false;
     e.preventDefault();
     console.log(post);
     this.postService.selectedPost(post.id);

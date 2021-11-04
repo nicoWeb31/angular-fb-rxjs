@@ -10,3 +10,8 @@ export interface Post {
 export interface PostWithUser extends Post {
   user: number;
 }
+
+export interface CRUDAction<T> {
+  action: 'add' | 'update' | 'delete';
+  data: T;
+}

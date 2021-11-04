@@ -4,9 +4,16 @@ import {
   BehaviorSubject,
   catchError,
   combineLatest,
-  map, shareReplay, throwError
+  concatMap,
+  map,
+  merge,
+  of,
+  scan,
+  shareReplay,
+  Subject,
+  throwError,
 } from 'rxjs';
-import { Post } from '..';
+import { CRUDAction, Post } from '..';
 import { DeclarativeUserService } from '../../core-user';
 
 @Injectable()
@@ -29,6 +36,26 @@ export class DeclarativePostsService {
     }),
     catchError(this.handleError),
     shareReplay(1)
+  );
+
+  private postCRUDSubject = new Subject<CRUDAction<Post>>();
+  postCRUDAction$ = this.postCRUDSubject.asObservable();
+
+  addPost(post: Post) {
+    this.postCRUDSubject.next({ action: 'add', data: post });
+  }
+
+  allPost$ = merge(
+    this.postsWithUsers$,
+    this.postCRUDAction$.pipe(concatMap((postAction) => this.savePost(postAction).pipe(
+map((post)=>{
+//
+})
+    )))
+  ).pipe(
+    scan((post, value) => {
+      // return [...post, ...value];
+    }, [] as Post[])
   );
 
   private selectedPostSubject = new BehaviorSubject<number>(0);
@@ -55,5 +82,26 @@ export class DeclarativePostsService {
       console.log(error);
       return 'unknown  error occured, please try again';
     });
+  }
+
+  savePost(postAction: CRUDAction<Post>) {
+    if (postAction.action === 'add') {
+      return this.addPostToServer(postAction.data);
+    }
+    return of(postAction.data)
+  }
+
+  addPostToServer(post: Post) {
+    return this.http.post<{id :number }>(
+      'https://jsonplaceholder.typicode.com/posts',
+      post
+    ).pipe(
+      map((id)=>{
+        return {
+          ...post,
+          id: id.id
+        }
+      })
+    )
   }
 }

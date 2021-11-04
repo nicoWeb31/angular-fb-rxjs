@@ -1,1 +1,31 @@
-<p>add-post works!</p>
+<div class="">
+  <h3>Add Post</h3>
+  <div class="">
+    <form [formGroup]="postForm" (ngSubmit)="onAddPost()">
+      <div class="my-2">
+        <label>Title</label>
+        <input type="text" formControlName="title" class="form-control" />
+      </div>
+      <div class="my-2">
+        <label>Description</label>
+        <textarea
+          type="text"
+          formControlName="description"
+          class="form-control"
+        ></textarea>
+      </div>
+      <div class="my-2">
+        <label>User</label>
+        <select class="form-select" formControlName="userId">
+          <option value="">select categories</option>
+          <option *ngFor="let user of users$ | async" value="user.id">
+            {{user.name}}
+          </option>
+        </select>
+      </div>
+      <div class="my-2">
+        <button type="submit" class="btn btn-info">Send</button>
+      </div>
+    </form>
+  </div>
+</div>
