@@ -18,7 +18,7 @@
         <label>User</label>
         <select class="form-select" formControlName="userId">
           <option value="">select categories</option>
-          <option *ngFor="let user of users$ | async" value="user.id">
+          <option *ngFor="let user of users$ | async" [value]=" +user.id ">
             {{user.name}}
           </option>
         </select>
